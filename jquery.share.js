@@ -25,7 +25,10 @@
 					margin = this.share.settings.margin,
 					pageTitle = this.share.settings.title||$(document).attr('title'),
 					pageUrl = this.share.settings.urlToShare||$(location).attr('href'),
-					pageDesc = "";
+					pageDesc = "",
+					I18n = this.share.settings.I18n || {
+						titleText: 'Share this page on '
+					};
 
 				$.each($(document).find('meta[name="description"]'),function(idx,item){
 					pageDesc = $(item).attr("content");
@@ -45,10 +48,20 @@
 						item = networks[item];
 						href = helpers.networkDefs[item].url;
 						href = href.replace('|u|',u).replace('|t|',t).replace('|d|',d)
-								   .replace('|140|',t.substring(0,130));
-						$("<a href='"+href+"' title='Share this page on "+item+
-							"' class='pop share-"+theme+" share-"+theme+"-"+item+"'></a>")
-							.appendTo($element);
+							.replace('|140|',t.substring(0,130));
+
+						var shareLink = $('<a/>')
+							.attr('href', href)
+							.attr('title', I18n.titleText + item)
+							.addClass('pop share-' + theme + ' share-' + theme + '-' + item);
+
+						// bind a click event
+						shareLink.on('click', function(e){
+							e.preventDefault();
+							window.open($(this).attr('href'),I18n.titleText + item,'toolbar=0,resizable=1,status=0,width=640,height=528');
+						});
+
+						$element.append(shareLink);
 					}
 
 					// customize css
@@ -82,14 +95,6 @@
 							}
 						}
 					}
-
-					// bind click
-					$('.pop').click(function(){
-						window.open($(this).attr('href'),'t','toolbar=0,resizable=1,status=0,width=640,height=528');
-						return false;
-					});
-
-
 				});// end plugin instance
 
 			}
