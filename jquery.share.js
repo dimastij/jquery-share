@@ -58,7 +58,16 @@
 						// bind a click event
 						shareLink.on('click', function(e){
 							e.preventDefault();
-							window.open($(this).attr('href'),I18n.titleText + item,'toolbar=0,resizable=1,status=0,width=640,height=528');
+							var top = parseInt((screen.height / 2) - (settings.popupHeight / 2))
+								, left = parseInt((screen.width / 2) - (settings.popupWidth / 2));
+
+							window.open(
+								$(this).attr('href'),
+								I18n.titleText + item,
+								'toolbar=0,resizable=1,status=0,copyhistory=no,' +
+									'width=' + settings.popupWidth + ',' +
+									'height=' +settings.popupHeight + ',top=' + top + ',left=' + left
+							);
 						});
 
 						$element.append(shareLink);
@@ -130,6 +139,8 @@
 	}
 
 	$.fn.share.defaults = {
+		popupWidth: 640,
+		popupHeight: 528,
 		networks: ['facebook','twitter','linkedin'],
 		theme: 'icon', // use round icons sprite
 		autoShow: true,
